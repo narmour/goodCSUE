@@ -58,8 +58,12 @@ void AWeapon::BeginPlay()
 	auto aiChar = Cast<ACSUEAICharacter>(myPawn);
 
     //check if the weapon is equiped by player char, if not, get enemy type from AICHAR
-    if(playerChar)
+    if(playerChar){
+
         enemyType =playerChar->getEnemyTeam();
+        UE_LOG(LogTemp,Warning,TEXT(" IF PLAYER CHAR : %s"),*enemyType);
+
+    }
     else if (aiChar){
         enemyType = aiChar->getEnemyTeam();
         //pure virtual works, doope
@@ -98,6 +102,7 @@ UParticleSystemComponent * AWeapon::muzzleFlash(UParticleSystem * particle)
 
 void AWeapon::OnStartFire()
 {
+   
 	if (!bShooting && currentAmmo >0) {
 		UE_LOG(LogTemp, Warning, TEXT("ON START"));
 
@@ -141,7 +146,7 @@ void AWeapon::WeaponTrace(){
 		auto myAIChar = Cast<ACSUEAICharacter>(myPawn);
 		static FName MuzzleSocket = FName(TEXT("MuzzleFlashSocket"));
 		//bShooting = false;
-		UE_LOG(LogTemp, Warning, TEXT("WEAPONTRACE"));
+		//UE_LOG(LogTemp, Warning, TEXT("WEAPONTRACE"));
 
 
 
@@ -176,6 +181,10 @@ void AWeapon::WeaponTrace(){
 				//if we hit an enemy, deal damage
 				auto hitEnemy = Cast<ACSUEAICharacter>(Hit.GetActor());
 				if (hitEnemy && enemyType != hitEnemy->getEnemyTeam()) {
+                    UE_LOG(LogTemp,Warning,TEXT(" ENEMY TYPE %s"),*enemyType)
+                    UE_LOG(LogTemp,Warning,TEXT(" HIT ACTOR ENEMY TEAM %s"),*hitEnemy->getEnemyTeam())
+
+                    
 					hitEnemy->takeDamage(weaponDamage);
 				}
 

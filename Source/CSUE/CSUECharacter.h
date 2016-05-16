@@ -86,7 +86,7 @@ public:
 		ACSUEShotgun *myShotgun;
     UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "team")
     //Team character is on, hardcoded for CT, want to set with HUD?
-    FString myTeam = FString(TEXT("T"));
+    FString myTeam;
 
     
 

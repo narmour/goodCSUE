@@ -311,6 +311,8 @@ bool ACSUECharacter::EnableTouchscreenMovement(class UInputComponent* InputCompo
 
 FString ACSUECharacter::getEnemyTeam(){
     //if character is on CT, enemy is T
+    UE_LOG(LogTemp,Warning,TEXT(" GET ENEMY TEAM +   %s"),*myTeam);
+
     if(myTeam == FString(TEXT("CT")))
         return FString(TEXT("T"));
     
