@@ -61,6 +61,12 @@ void ACSUEBomb::bombExplode() {
 
 void ACSUEBomb::bombDefused() {
 	UE_LOG(LogTemp, Warning, TEXT("DEFUSED"));
+	auto myGM = (ACSUEGameMode*)GetWorld()->GetAuthGameMode();
+	if (myGM) {
+		myGM->endRound(FString(TEXT("ct")));
+		GetWorldTimerManager().ClearTimer(defuseTimer);
+
+	}
 
 }
 
@@ -80,14 +86,14 @@ void ACSUEBomb::checkOverlap() {
 			//UE_LOG(LogTemp, Warning, TEXT("FOUND TERRORIST"));
 			//start bomb timer
 			if (!planted) {
-				GetWorldTimerManager().SetTimer(bombTimer, this, &ACSUEBomb::bombExplode, 2.f, false);
+				GetWorldTimerManager().SetTimer(bombTimer, this, &ACSUEBomb::bombExplode, 20.f, false);
 				planted = true;
 				UE_LOG(LogTemp, Warning, TEXT("bomb planted"));
 
 			}
 
 		}
-
+		//player plant
 		if (player && player->getEnemyTeam() == FString(TEXT("ct"))) {
 			//UE_LOG(LogTemp, Warning, TEXT("FOUND TERRORIST"));
 			if (!planted) {
@@ -99,17 +105,27 @@ void ACSUEBomb::checkOverlap() {
 
 
 		}
+		//player defuse
+		if (player && player->getEnemyTeam() == FString(TEXT("t"))) {
+			UE_LOG(LogTemp, Warning, TEXT("player defuse"));
+			if (planted && !GetWorldTimerManager().IsTimerActive(defuseTimer)) {
+				GetWorldTimerManager().SetTimer(defuseTimer, this, &ACSUEBomb::bombDefused, 3.f, false);
+
+			}
+		}
+		//ai defuse
 		else if (ct) {
 			//defuse shit
 
 			//timer not started yet?
-			if (!GetWorldTimerManager().IsTimerActive(defuseTimer)) {
+			if (planted && !GetWorldTimerManager().IsTimerActive(defuseTimer)) {
 				GetWorldTimerManager().SetTimer(defuseTimer, this, &ACSUEBomb::bombDefused, 3.f, false);
 
 				
 			}
 			
 		}
+		//if no is on the bomb, dont defuse
 		else {
 			//if defuse timer is active, turn it off
 			if (GetWorldTimerManager().IsTimerActive(defuseTimer)) {

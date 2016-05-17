@@ -38,7 +38,7 @@ public:
 
 
 
-	void decrementTimer() { time -= 1; };
+	void decrementTimer() { time -= 1; if (time < 1) endRound(FString(TEXT("ct"))); };
 	UFUNCTION(BlueprintCallable, Category = "bomb")
 	ACSUEBomb *getABomb() { return myABomb; };
 	UFUNCTION(BlueprintCallable, Category = "bomb")

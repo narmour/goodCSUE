@@ -109,10 +109,23 @@ void ACSUEGameMode::endRound(FString winningTeam){
 	GetWorldTimerManager().ClearTimer(roundTimer);
 	time = 180;
 	//start new round if game is not over
-    UE_LOG(LogTemp,Warning,TEXT("ROUND OVER"));
 	if (tWins == 5 || ctWins == 5)
 		endGame(winningTeam);
-	else
+	else {
+
 		startRound();
+		auto myChar = (ACSUECharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+		if (myChar->myTeam == FString(TEXT("CT"))) {
+			FVector spawn = FVector(-3163.f, 1183.f, -227.f);
+			myChar->SetActorRotation(FRotator::ZeroRotator);
+			myChar->SetActorLocation(spawn, false);
+
+		}
+		else {
+			FVector spawn = FVector(-6305.f, 9740.f, 584.f);
+			myChar->SetActorRotation(FRotator::ZeroRotator);
+			myChar->SetActorLocation(spawn, false);
+		}
+	}
 
 }
